@@ -33,6 +33,22 @@ public class App {
     static long operacoes;
     static double nanoToMilli = 1.0/1_000_000;
 
+    static class ResultadoExecucao {
+        String algoritmo;
+        int entrada;
+        long operacoes;
+        double tempoMs;
+        String retorno;
+
+        ResultadoExecucao(String algoritmo, int entrada, long operacoes, double tempoMs, String retorno) {
+            this.algoritmo = algoritmo;
+            this.entrada = entrada;
+            this.operacoes = operacoes;
+            this.tempoMs = tempoMs;
+            this.retorno = retorno;
+        }
+    }
+
     /**
      * Código de teste 1. Este método...
      * @param vetor Vetor com dados para teste.
@@ -41,6 +57,7 @@ public class App {
     static int codigo1(int[] vetor) {
         int resposta = 0;
         for (int i = 0; i < vetor.length; i += 2) {
+            operacoes++;
             resposta += vetor[i]%2;
         }
         return resposta;
@@ -55,6 +72,7 @@ public class App {
         int contador = 0;
         for (int k = (vetor.length - 1); k > 0; k /= 2) {
             for (int i = 0; i <= k; i++) {
+                operacoes++;
                 contador++;
             }
 
@@ -70,6 +88,7 @@ public class App {
         for (int i = 0; i < vetor.length - 1; i++) {
             int menor = i;
             for (int j = i + 1; j < vetor.length; j++) {
+                operacoes++;
                 if (vetor[j] < vetor[menor])
                     menor = j;
             }
@@ -84,7 +103,8 @@ public class App {
      * @param n Ponto inicial do algoritmo
      * @return Um inteiro que significa...
      */
-    static int codigo4(int n) {
+    static long codigo4(int n) {
+        operacoes++;
         if (n <= 2)
             return 1;
         else
@@ -104,7 +124,115 @@ public class App {
         return vetor;
         
     }
+
+    static ResultadoExecucao executarCodigo1(int tamanho) {
+        int[] vetor = gerarVetor(tamanho);
+        operacoes = 0;
+        long inicio = System.nanoTime();
+        int resposta = codigo1(vetor);
+        long fim = System.nanoTime();
+        return new ResultadoExecucao("codigo1", tamanho, operacoes, (fim - inicio) * nanoToMilli, String.valueOf(resposta));
+    }
+
+    static ResultadoExecucao executarCodigo2(int tamanho) {
+        int[] vetor = gerarVetor(tamanho);
+        operacoes = 0;
+        long inicio = System.nanoTime();
+        int resposta = codigo2(vetor);
+        long fim = System.nanoTime();
+        return new ResultadoExecucao("codigo2", tamanho, operacoes, (fim - inicio) * nanoToMilli, String.valueOf(resposta));
+    }
+
+    static ResultadoExecucao executarCodigo3(int tamanho) {
+        int[] vetor = gerarVetor(tamanho);
+        operacoes = 0;
+        long inicio = System.nanoTime();
+        codigo3(vetor);
+        long fim = System.nanoTime();
+        return new ResultadoExecucao("codigo3", tamanho, operacoes, (fim - inicio) * nanoToMilli, String.valueOf(vetor[0]));
+    }
+
+    static ResultadoExecucao executarCodigo4(int n) {
+        operacoes = 0;
+        long inicio = System.nanoTime();
+        long resposta = codigo4(n);
+        long fim = System.nanoTime();
+        return new ResultadoExecucao("codigo4", n, operacoes, (fim - inicio) * nanoToMilli, String.valueOf(resposta));
+    }
+
+    static void imprimirCabecalho() {
+        System.out.println("algoritmo;entrada;operacoes;tempo_ms;retorno");
+    }
+
+    static void imprimirResultado(ResultadoExecucao resultado) {
+        System.out.printf(
+            "%s;%d;%d;%.3f;%s%n",
+            resultado.algoritmo,
+            resultado.entrada,
+            resultado.operacoes,
+            resultado.tempoMs,
+            resultado.retorno
+        );
+    }
+
+    static boolean deveExecutar(String[] args, String algoritmo) {
+        if (args.length == 0) {
+            return true;
+        }
+
+        for (String argumento : args) {
+            if (argumento.equalsIgnoreCase("all") || argumento.equals(algoritmo)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    static void executarBateriaCodigo1() {
+        for (int tamanho : tamanhosTesteGrande) {
+            imprimirResultado(executarCodigo1(tamanho));
+        }
+    }
+
+    static void executarBateriaCodigo2() {
+        for (int tamanho : tamanhosTesteGrande) {
+            imprimirResultado(executarCodigo2(tamanho));
+        }
+    }
+
+    static void executarBateriaCodigo3() {
+        for (int tamanho : tamanhosTesteMedio) {
+            imprimirResultado(executarCodigo3(tamanho));
+        }
+    }
+
+    static void executarBateriaCodigo4() {
+        for (int n : tamanhosTestePequeno) {
+            imprimirResultado(executarCodigo4(n));
+        }
+    }
+
     public static void main(String[] args) {
-        
+        imprimirCabecalho();
+
+        try {
+            if (deveExecutar(args, "1")) {
+                executarBateriaCodigo1();
+            }
+            if (deveExecutar(args, "2")) {
+                executarBateriaCodigo2();
+            }
+            if (deveExecutar(args, "3")) {
+                executarBateriaCodigo3();
+            }
+            if (deveExecutar(args, "4")) {
+                executarBateriaCodigo4();
+            }
+        } catch (OutOfMemoryError erro) {
+            System.err.println("Memoria insuficiente para executar os testes atuais.");
+            System.err.println("Tente executar com mais heap, por exemplo: java -Xmx6g -cp src App");
+            throw erro;
+        }
     }
 }

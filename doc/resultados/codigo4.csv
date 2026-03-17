@@ -1,0 +1,6 @@
+﻿algoritmo;entrada;operacoes;tempo_ms;retorno
+codigo4;3;3;0,001;2
+codigo4;6;15;0,001;8
+codigo4;12;287;0,015;144
+codigo4;24;92735;0,233;46368
+codigo4;48;9615053951;11768,238;4807526976

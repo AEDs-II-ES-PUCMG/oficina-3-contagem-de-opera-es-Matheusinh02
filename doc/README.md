@@ -3,7 +3,7 @@
 A documentação do projeto é composta pelos seguintes itens: 
  - [Diagramas de classe do projeto (histórico de versões)](/doc/diagramas/) **Obrigatório**
  - [Instruções para uso](/doc/instrucoes.md) **Obrigatório**
- - [Quadro de tarefas do projeto](https://insira.aqui.sua.URL) **Obrigatório para trabalhos em grupo**
- - [Link para o vídeo de apresentação (edite este mesmo md para colocar sua URL)](http://insira.aqui.sua.URL) **Somente em caso de apresentação por vídeo**
+ - [Análise de desempenho](/doc/analise-desempenho.md)
+ - [Resultados coletados](/doc/resultados/)
 
-Para o "Quadro de Tarefas", o grupo de trabalho deve criar um Projeto no repositório e atualizar o link neste arquivo. Em caso de dúvidas sobre este processo, pergunte ao seu professor com urgência.
+Observação: itens de quadro de tarefas e vídeo se aplicam apenas quando solicitados especificamente pelo professor para trabalhos em grupo.
